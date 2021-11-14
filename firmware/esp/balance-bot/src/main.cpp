@@ -3,6 +3,10 @@
 #include <Adafruit_BNO055.h>
 #include "pid.h"
 #include "time.h"
+#include "display.h"
+#include "poser.h"
+#include "kalman.h"
+#include "imuconfig.h"
 
 #define RX2 17
 #define TX2 16
@@ -11,56 +15,35 @@
 #define DEBUG_SERIAL Serial
 #define DXL_DIR_PIN 23
  
-const uint8_t LEFT_DXL_ID = 1;
-const uint8_t RIGHT_DXL_ID = 2;
 const float DXL_PROTOCOL_VERSION = 2.0;
 
-const int MINIMUM_VOLTAGE_2S_LIPO = 70; // == 7V
-const int OVERLOAD_ERROR      = 1 << 0;
-const int OVERHEATING_ERROR   = 1 << 1;
-const int UNDERVOLTAGE_ERROR  = 1 << 2;
-const int SHUTDOWN_ON_ERROR = OVERLOAD_ERROR | OVERHEATING_ERROR | UNDERVOLTAGE_ERROR;
 
-const unsigned int MICROSECOND = 1;
-const unsigned int MILLISECOND = 1000;
-const unsigned int SECOND = 1000000;
-
-const int FORWARD_DIR = 1;
-const int REVERSE_DIR = -1;
-int CURRENT_DIRECTION = 0;
+const int PID_CONTROL_MAX = 0x3FF;
 
 Dynamixel2Arduino dxl(DXL_SERIAL, DXL_DIR_PIN);
 Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28);
+PID pid;
+Display screen;
+IMUConfig config(&bno, &screen);
+
+Poser poser(bno, dxl, pid);
+
+
 
 
 void initPID()
 {
   // Initialize PID controller
   Serial.printf("Initializing PID");
-  PID pid;
-  pid_zeroize(&pid);
+
+  // Uten ballast, men med USB koblet til
+  pid_zeroize(&pid, PID_CONTROL_MAX);
   pid.windup_guard = 0; 
-  pid.proportional_gain = 95;
-  pid.integral_gain = 0.75;
-  pid.derivative_gain = 0.5;
+  pid.proportional_gain = 370;
+  pid.integral_gain = 0;
+  pid.derivative_gain = 0;
 }
 
-//This namespace is required to use Control table item names
-using namespace ControlTableItem;
-
-void initServo(uint8_t id)
-{
-  // Get DYNAMIXEL information
-  dxl.ping(id);
-
-  // Turn off torque when configuring items in EEPROM area
-  dxl.torqueOff(id);
-  dxl.writeControlTableItem(MIN_VOLTAGE_LIMIT, id, MINIMUM_VOLTAGE_2S_LIPO);
-  dxl.writeControlTableItem(SHUTDOWN, id, SHUTDOWN_ON_ERROR);
-  dxl.setOperatingMode(id, OP_VELOCITY);
-  dxl.torqueOn(id);
-
-}
 
 void initDynamixel()
 {
@@ -68,9 +51,13 @@ void initDynamixel()
   dxl.begin(1000000);
   // Set Port Protocol Version. This has to match with DYNAMIXEL protocol version.
   dxl.setPortProtocolVersion(DXL_PROTOCOL_VERSION);
-  initServo(LEFT_DXL_ID);
-  initServo(RIGHT_DXL_ID);
+
+  poser.Begin();
+
+  poser.RelaxArms();
+  sleep(3);
 }
+
 
 void setup() 
 {
@@ -82,100 +69,133 @@ void setup()
   }
   Serial.print("Yay. BNO055 is present\n");
 
+  bno.setMode(Adafruit_BNO055::OPERATION_MODE_NDOF);
+//  bno.setMode(Adafruit_BNO055::OPERATION_MODE_ACCGYRO);
+
+
+  screen.Begin();
+  config.Begin();
+  config.Calibrate();
+
   initDynamixel();
   initPID();
+
+
 }
 
-void forwards()
-{
-  if (CURRENT_DIRECTION != FORWARD_DIR)
-  {
-    Serial.println("Forwards");
-    CURRENT_DIRECTION = FORWARD_DIR;
-  }
-}
-
-void reverse()
-{
-  if (CURRENT_DIRECTION != REVERSE_DIR)
-  {
-    Serial.println("Forwards");
-    CURRENT_DIRECTION = REVERSE_DIR;
-  }
-}
-
-void setSpeed(float speed)
-{
-  unsigned int uSpeed_2 = abs(speed * 1000);
-  unsigned int uSpeed_1 = uSpeed_2;
-  if (uSpeed_1 > 0x3FF)
-    uSpeed_1 = 0x3FF;
-  if (uSpeed_2 > 0x3FF)
-    uSpeed_2 = 0x3FF;
-
-  // uSpeed_1 &= 0x3FF;
-  // uSpeed_2 &= 0x3FF;
-  if (CURRENT_DIRECTION == REVERSE_DIR)
-  {
-    uSpeed_1 |= 0x400;
-  } else  {
-    uSpeed_2 |= 0x400;
-  }
-
-  dxl.setGoalVelocity(RIGHT_DXL_ID, uSpeed_1);
-  dxl.setGoalVelocity(LEFT_DXL_ID, uSpeed_2);
-}
 
 void loop() 
 {
-  // unsigned long loopTime = MICROSECOND * 100;
-  unsigned long loopTime = MILLISECOND * 10;
-  unsigned long start_time, end_time;
-  unsigned long dt = loopTime;
+//    poser.AutoTune();
 
-  // Initialize PID controller
-  PID pid;
-  pid_zeroize(&pid);
-  pid.proportional_gain = 0.4;
-  pid.integral_gain = 0;  // TBD
-  pid.derivative_gain = 0; // TBD
-  pid.windup_guard = 0.01;
+  Kalman k;
 
   sensors_event_t event; 
-  bno.getEvent(&event);
-  float alpha = 0.5;    // Filter
 
-  float zOld = event.orientation.z;
-  float zNew = zOld;
-  float TARGET_ANGLE = 90;
+  // sensors_vec_t a;
+  // sensors_vec_t g;
 
-  while (true)
+  char buf[265];
+  unsigned long loopTime = 10;
+  unsigned long dt = loopTime;
+  unsigned long start_time;
+
+  // float kA;
+
+  pid.proportional_gain = 200;
+  pid.integral_gain = 0;
+  pid.derivative_gain = 0;
+
+  int count = 0;
+
+  while (true) 
   {
-    start_time = micros();
+    count++;
+
+
+    start_time = millis();
+
+    // bno.getEvent(&event, Adafruit_BNO055::VECTOR_ACCELEROMETER);
+    // a = event.acceleration;
+    // bno.getEvent(&event, Adafruit_BNO055::VECTOR_GYROSCOPE);
+    // g = event.gyro;
+    // kA = k.getAngle(a.z, g.x, dt);
+    // double error_new = kA+0.3;
+
     bno.getEvent(&event);
+    double error_new = TARGET_ANGLE+event.orientation.z;
 
-    float error = TARGET_ANGLE+event.orientation.z;
-    // Smoothing out the IMU response a bit
-    zNew = (alpha * error + (1-alpha)*zOld) / 2;
-    pid_update(&pid, zNew, dt);
-    zOld = zNew;
+    if (count > 50) {
+      sprintf(buf, "angle: %3f", event.orientation.z);
+      screen.DisplayText(buf);
+      count = 0;
+    }
 
-    if (error < 0 ) {
-      forwards();
-    } else if (error > 0) {
-      reverse();
+
+    pid_update(&pid, error_new, dt);
+    if (pid.control > 0 ) {
+      poser.Reverse();
+    } else if (pid.control < 0) {
+      poser.Forwards();
     } 
+    if (pid.control != 0) {
+     poser.SetSpeed(pid.control);
+    }
 
-    if (error != 0) {
-      setSpeed(pid.control);
-    }
-  
-    end_time = micros();
-    dt = end_time - start_time;
-    while (true) {
-      end_time = micros();
-      if (end_time > start_time+loopTime)
-        break;
-    }
+    dt = (millis() - start_time);
+
+    // do {
+    //   dt = (millis() - start_time);
+    // } while (dt < loopTime);
   }
+
+
+//   unsigned long loopTime = 12;
+//   unsigned long start_time;
+//   unsigned long dt = loopTime;
+
+//   sensors_event_t event; 
+//   bno.getEvent(&event);
+//   double pid_input;
+//   double error_new = TARGET_ANGLE+event.orientation.z;
+// //  double error_old = error_new;
+//   //double alpha = 0.98;
+
+
+//   char buf[265];
+//   while (true)
+//   {
+//     start_time = millis();
+//     bno.getEvent(&event);
+
+//   //  error_old = error_new;
+//     error_new = TARGET_ANGLE+event.orientation.z;
+//     //pid_input = (alpha * error_new + (1-alpha)*error_old) / 2;
+
+
+// //    pid_update(&pid, pid_input, dt);
+//     pid_update(&pid, error_new, dt);
+
+//     if (pid.control < 0 ) {
+//       poser.Forwards();
+//     } else if (pid.control > 0) {
+//       poser.Reverse();
+//     } 
+
+//     // sprintf(buf, "e: %.3f, c: %.3f, a: %.3f", pid_input, pid.control, event.orientation.z);
+//     // Serial.println(buf);
+//     //sprintf(buf, "c: %d, e: %.3f",bno.isFullyCalibrated(), error_new);
+//     //Serial.println(buf);
+
+//     if (pid.control != 0) {
+//   //    poser.SetSpeed(pid.control);
+//     }
+  
+//     do {
+//       dt = (millis() - start_time);
+//     } while (dt < loopTime);
+
+
+//   }
+
 }

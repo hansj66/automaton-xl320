@@ -2,10 +2,11 @@
 
 #include "PID.h"
 
-void pid_zeroize(PID* pid) {
+void pid_zeroize(PID* pid, double c_max) {
     // set prev and integrated error to zero
     pid->prev_error = 0;
     pid->int_error = 0;
+    pid->control_max = c_max;
 }
  
 void pid_update(PID* pid, double curr_error, double dt) 
@@ -32,6 +33,8 @@ void pid_update(PID* pid, double curr_error, double dt)
  
     // summation of terms
     pid->control = p_term + i_term + d_term;
+    if (pid->control > pid->control_max)
+        pid->control = pid->control_max;
  
     // save current error as previous error for next iteration
     pid->prev_error = curr_error;
