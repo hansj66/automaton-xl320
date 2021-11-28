@@ -3,7 +3,10 @@
 
 #include <Adafruit_BNO055.h>
 #include <Dynamixel2Arduino.h>
-#include "pid.h"
+//#include "pid.h"
+#include <PID_v1.h>
+#include "display.h"
+#include <map>
 
 
 const uint8_t LEFT_MOTOR_ID = 1;
@@ -21,17 +24,15 @@ const int SHUTDOWN_ON_ERROR = OVERLOAD_ERROR | OVERHEATING_ERROR | UNDERVOLTAGE_
 const int FORWARD_DIR = 1;
 const int REVERSE_DIR = -1;
 
-const float TARGET_ANGLE = 89.8;
-
 class Poser
 {
     public:
-     Poser(Adafruit_BNO055 & bno, Dynamixel2Arduino & dxl, PID & pid);
+     Poser(Adafruit_BNO055 & bno, Dynamixel2Arduino & dxl, PID & pid, Display & display);
      void Rise();
      void RelaxArms();
      void InitServo(uint8_t id, uint8_t mode);
      void Begin();
-     void Balance();
+     double Balance();
      void Forwards();
      void Reverse();
      void AutoTune();
@@ -41,6 +42,11 @@ class Poser
      Adafruit_BNO055 & _bno;
      Dynamixel2Arduino & _dxl;
      PID & _pid;
+     Display & _screen;
+     double AutoTuneP(const char * heading, double minVal, double maxVal, double increment);
+     double AutoTuneI(const char * heading, double minVal, double maxVal, double increment);
+     double AutoTuneD(const char * heading, double minVal, double maxVal, double increment);
+
      int _currentDirection;
 
 

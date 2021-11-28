@@ -1,12 +1,18 @@
 #include <Arduino.h>
+#include <ESPmDNS.h>
 #include <Dynamixel2Arduino.h>
 #include <Adafruit_BNO055.h>
-#include "pid.h"
 #include "time.h"
 #include "display.h"
 #include "poser.h"
-#include "kalman.h"
 #include "imuconfig.h"
+#include <PID_v1.h>
+#include <WiFi.h>
+#include <AsyncTCP.h>
+#include <ESPAsyncWebServer.h>
+#include "webserver.h"
+
+// #define TESTING_WIFI
 
 #define RX2 17
 #define TX2 16
@@ -14,20 +20,40 @@
 #define DXL_SERIAL   Serial2
 #define DEBUG_SERIAL Serial
 #define DXL_DIR_PIN 23
- 
+
+
+extern double P_global;
+extern double I_global;
+extern double D_global;
+extern double SetPoint_Global;
+
+
+// uint8_t qrcodeBytes[64*64];
+
+
+AsyncWebServer server(80);
+
 const float DXL_PROTOCOL_VERSION = 2.0;
 
+double TargetAngle = -90.0;
+//Define Variables we'll be connecting to
+double PID_Setpoint = TargetAngle;
+double PID_Input;
+double PID_Output;
 
-const int PID_CONTROL_MAX = 0x3FF;
+//Specify the links and initial tuning parameters
+double Kp=2, Ki=5, Kd=1;
+PID pid(&PID_Input, &PID_Output, &PID_Setpoint, Kp, Ki, Kd, DIRECT);
+
 
 Dynamixel2Arduino dxl(DXL_SERIAL, DXL_DIR_PIN);
 Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28);
-PID pid;
 Display screen;
 IMUConfig config(&bno, &screen);
 
-Poser poser(bno, dxl, pid);
+Poser poser(bno, dxl, pid, screen);
 
+const unsigned long LOOPTIME_MS = 5;
 
 
 
@@ -36,12 +62,9 @@ void initPID()
   // Initialize PID controller
   Serial.printf("Initializing PID");
 
-  // Uten ballast, men med USB koblet til
-  pid_zeroize(&pid, PID_CONTROL_MAX);
-  pid.windup_guard = 0; 
-  pid.proportional_gain = 370;
-  pid.integral_gain = 0;
-  pid.derivative_gain = 0;
+  pid.SetOutputLimits(-1023,1023); 
+  pid.SetMode(AUTOMATIC);
+  pid.SetSampleTime(LOOPTIME_MS);
 }
 
 
@@ -53,8 +76,9 @@ void initDynamixel()
   dxl.setPortProtocolVersion(DXL_PROTOCOL_VERSION);
 
   poser.Begin();
-
   poser.RelaxArms();
+  poser.SetSpeed(0);
+
   sleep(3);
 }
 
@@ -62,6 +86,39 @@ void initDynamixel()
 void setup() 
 {
   DEBUG_SERIAL.begin(115200);
+  
+  bno.setMode(Adafruit_BNO055::OPERATION_MODE_NDOF);
+  // bno.setMode(Adafruit_BNO055::OPERATION_MODE_ACCGYRO);
+
+
+  screen.Begin();
+
+  // Enable WiFi station mode. 
+  screen.DisplayText("Enabling WiFi\nstation mode.");
+  WiFi.mode(WIFI_STA);
+  sleep(1);
+  screen.DisplayText("Accessing network...");
+  sleep(1);
+  WiFi.begin(WIFI_SSID, WIFI_PASS);
+  if (WiFi.waitForConnectResult() != WL_CONNECTED)
+  {
+      screen.DisplayText("WiFi Failed!\n");
+      return;
+  }
+  char buf[64];
+  sprintf(buf, "web server at:\nhttp://%s\nhttp://stumbler", WiFi.localIP().toString().c_str());
+  screen.DisplayText(buf);
+  sleep(2);
+
+  // Make discovery on the network somewhat easier than having to rely on the IP address.
+  if (!MDNS.begin("stumbler"))
+  {
+    screen.DisplayText("Error starting mDNS!");
+  }
+  screen.DisplayText("Enabling mDNS");
+  sleep(1);
+
+
   while (!bno.begin())
   {
     Serial.print("Bummer! No BNO055 detected\n");
@@ -69,133 +126,31 @@ void setup()
   }
   Serial.print("Yay. BNO055 is present\n");
 
-  bno.setMode(Adafruit_BNO055::OPERATION_MODE_NDOF);
-//  bno.setMode(Adafruit_BNO055::OPERATION_MODE_ACCGYRO);
-
-
-  screen.Begin();
+#ifndef TESTING_WIFI
   config.Begin();
   config.Calibrate();
 
   initDynamixel();
   initPID();
+#endif
 
+  server.onNotFound(notFoundHandler);
+  server.on("/", HTTP_GET, landingPageHandler);
+  server.on("/param", HTTP_GET, paramAdjustHandler);
 
+  // TODO: Load and Save
+
+  server.begin();
+
+  screen.DisplayText("Setup complete.");
+  delay(2);
+
+  sprintf(buf, "http://%s", WiFi.localIP().toString().c_str());
+  screen.DisplayQRCode(buf);
 }
 
 
 void loop() 
 {
-//    poser.AutoTune();
-
-  Kalman k;
-
-  sensors_event_t event; 
-
-  // sensors_vec_t a;
-  // sensors_vec_t g;
-
-  char buf[265];
-  unsigned long loopTime = 10;
-  unsigned long dt = loopTime;
-  unsigned long start_time;
-
-  // float kA;
-
-  pid.proportional_gain = 200;
-  pid.integral_gain = 0;
-  pid.derivative_gain = 0;
-
-  int count = 0;
-
-  while (true) 
-  {
-    count++;
-
-
-    start_time = millis();
-
-    // bno.getEvent(&event, Adafruit_BNO055::VECTOR_ACCELEROMETER);
-    // a = event.acceleration;
-    // bno.getEvent(&event, Adafruit_BNO055::VECTOR_GYROSCOPE);
-    // g = event.gyro;
-    // kA = k.getAngle(a.z, g.x, dt);
-    // double error_new = kA+0.3;
-
-    bno.getEvent(&event);
-    double error_new = TARGET_ANGLE+event.orientation.z;
-
-    if (count > 50) {
-      sprintf(buf, "angle: %3f", event.orientation.z);
-      screen.DisplayText(buf);
-      count = 0;
-    }
-
-
-    pid_update(&pid, error_new, dt);
-    if (pid.control > 0 ) {
-      poser.Reverse();
-    } else if (pid.control < 0) {
-      poser.Forwards();
-    } 
-    if (pid.control != 0) {
-     poser.SetSpeed(pid.control);
-    }
-
-    dt = (millis() - start_time);
-
-    // do {
-    //   dt = (millis() - start_time);
-    // } while (dt < loopTime);
-  }
-
-
-//   unsigned long loopTime = 12;
-//   unsigned long start_time;
-//   unsigned long dt = loopTime;
-
-//   sensors_event_t event; 
-//   bno.getEvent(&event);
-//   double pid_input;
-//   double error_new = TARGET_ANGLE+event.orientation.z;
-// //  double error_old = error_new;
-//   //double alpha = 0.98;
-
-
-//   char buf[265];
-//   while (true)
-//   {
-//     start_time = millis();
-//     bno.getEvent(&event);
-
-//   //  error_old = error_new;
-//     error_new = TARGET_ANGLE+event.orientation.z;
-//     //pid_input = (alpha * error_new + (1-alpha)*error_old) / 2;
-
-
-// //    pid_update(&pid, pid_input, dt);
-//     pid_update(&pid, error_new, dt);
-
-//     if (pid.control < 0 ) {
-//       poser.Forwards();
-//     } else if (pid.control > 0) {
-//       poser.Reverse();
-//     } 
-
-//     // sprintf(buf, "e: %.3f, c: %.3f, a: %.3f", pid_input, pid.control, event.orientation.z);
-//     // Serial.println(buf);
-//     //sprintf(buf, "c: %d, e: %.3f",bno.isFullyCalibrated(), error_new);
-//     //Serial.println(buf);
-
-//     if (pid.control != 0) {
-//   //    poser.SetSpeed(pid.control);
-//     }
-  
-//     do {
-//       dt = (millis() - start_time);
-//     } while (dt < loopTime);
-
-
-//   }
-
+  poser.Balance();
 }

@@ -6,6 +6,7 @@
 ArduinoNvs nvs;
 
 const char * CALIBRATION_BLOB_NAME = "cal";
+const int MESSAGE_GRACE_PERIOD = 1000;
 
 IMUConfig::IMUConfig(Adafruit_BNO055 * bno, Display * screen) :
     _calibrationDataLoaded(false),
@@ -22,10 +23,10 @@ void IMUConfig::Begin()
 void IMUConfig::Calibrate()
 {
 
-    _screen->DisplayText("Checking for NVS\ncalibration data", 3000);
+    _screen->DisplayText("Checking for NVS\ncalibration data", MESSAGE_GRACE_PERIOD);
 
     if (NVS.getBlob(CALIBRATION_BLOB_NAME, _calibrationData)) {
-        _screen->DisplayText("NVS Calibration\nfound", 3000);
+        _screen->DisplayText("NVS Calibration\nfound", MESSAGE_GRACE_PERIOD);
         if (_calibrationData.size() == CALIBRATION_DATA_SIZE) {
             _calibrationDataLoaded = true; 
         }
@@ -42,17 +43,17 @@ void IMUConfig::Calibrate()
         if (event.orientation.z > 0)
         {
             _calibrationDataLoaded = false;
-            _screen->DisplayText("Forcing recalibration", 3000);
+            _screen->DisplayText("Forcing recalibration", MESSAGE_GRACE_PERIOD);
         }
     }
     else {
-       _screen->DisplayText("NVS Calibration\nnot found",3000);
+       _screen->DisplayText("NVS Calibration\nnot found",MESSAGE_GRACE_PERIOD);
     }
 
     // Write the sensor offsets to the BNO055 and bail out
     if (_calibrationDataLoaded) {
         _bno->setSensorOffsets(_calibrationData.data());
-        _screen->DisplayText("Updating BNO055\ncalibration data\nfrom NVS", 3000);
+        _screen->DisplayText("Updating BNO055\ncalibration data\nfrom NVS", MESSAGE_GRACE_PERIOD);
         return;
     }
 
@@ -76,11 +77,11 @@ void IMUConfig::Calibrate()
     {
         if (NVS.setBlob(CALIBRATION_BLOB_NAME, calibrationData, sizeof(calibrationData)))
         {
-            _screen->DisplayText("Calibration data\nwritten to NVS\nOK", 3000);
+            _screen->DisplayText("Calibration data\nwritten to NVS\nOK", MESSAGE_GRACE_PERIOD);
         }
         else
         {
-            _screen->DisplayText("FAILED\nWriting calibration data\nto NVS\nOK", 3000);
+            _screen->DisplayText("FAILED\nWriting calibration data\nto NVS\nOK", MESSAGE_GRACE_PERIOD);
         }
     }
 }

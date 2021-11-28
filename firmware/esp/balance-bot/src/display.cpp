@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdio.h>
 #include "display.h"
+#include "qrcode.h"
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
@@ -42,12 +43,29 @@ void Display::Begin()
   display.setTextSize(1);
   display.setTextColor(WHITE);
   display.setCursor(0, 10);
-  // Display static text
-  display.println("Hello, world!");
-  display.display(); 
 }
 
 char displaybuffer[512];
+
+void Display::DisplayQRCode(char * buf)
+{
+
+  display.clearDisplay();
+  QRCode qrcode;
+  uint8_t qrcodeBytes[qrcode_getBufferSize(3)];
+  qrcode_initText(&qrcode, qrcodeBytes, 3, 0, buf);
+
+  for (uint8_t y = 0; y < qrcode.size; y++) {
+    for (uint8_t x = 0; x < qrcode.size; x++) {
+        if (qrcode_getModule(&qrcode, x, y)) {
+              display.drawRect(x*2+32, y*2, 2, 2, 1);
+        } else {
+              display.drawRect(x*2+32, y*2, 2, 2, 0);
+        }
+    }
+  }
+  display.display();
+}
 
 void Display::DisplayText(const char * text, int waitms) 
 {

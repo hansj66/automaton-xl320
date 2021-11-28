@@ -7,6 +7,7 @@ class Display
         Display();
         void Begin();
         void DisplayText(const char * text, int waitms = 0);
+        void DisplayQRCode(char * buf);
 };
 
 

@@ -9,9 +9,10 @@ typedef struct {
     double prev_error;
     double int_error;
     double control;
+    double control_max;
 } PID;
  
-void pid_zeroize(PID* pid);
+void pid_zeroize(PID* pid, double c_max);
 void pid_update(PID* pid, double curr_error, double dt);
     
 #endif
