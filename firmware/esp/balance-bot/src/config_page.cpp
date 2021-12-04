@@ -36,8 +36,8 @@ String config_page = R"TEMPLATE(
   </style>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
-<body>
-    <center>
+<body onload="FlashLoad()">
+  <center>
         <h1>Automaton XL-320</h1>
         <h2>PID</h2>
         <a href="https://www.TimeExpander.com">Time Expander</a>
@@ -57,7 +57,9 @@ String config_page = R"TEMPLATE(
       </tr>
     </table>  
     <hr>
-    
+    <button onclick="GreetHumanOverlord()">Greet human overlord</button>
+    <button onclick="Boogie()">Boogie</button>
+  
   
 
   <script>
@@ -80,7 +82,7 @@ String config_page = R"TEMPLATE(
       // Integral gain
       row = table.insertRow(rowCount);
       row.insertCell(0).innerHTML= '<h3 align="left">I</h3>';
-      row.insertCell(1).innerHTML= '<input type="range" min="0" max="500" class="slider" id="integralGainSlider"/>';
+      row.insertCell(1).innerHTML= '<input type="range" min="0" max="2000" class="slider" id="integralGainSlider"/>';
       row.insertCell(2).innerHTML= '<p><span id="integralGainSliderValue"></span></p>';
 
       // Proportional gain
@@ -139,16 +141,35 @@ String config_page = R"TEMPLATE(
       $.get("/load?param=" + pidParamName.value, function(data, status) 
       {
         var paramValue = data.split(",");
-        document.getElementById("setPointSlider").value = data[0];
-        document.getElementById("proportionalGainSlider").value = data[1];
-        document.getElementById("integralGainSlider").value = data[2];
-        document.getElementById("derivativeGainSlider").value = data[3];
+        document.getElementById("setPointSlider").value = paramValue[3];
+        document.getElementById("proportionalGainSlider").value = paramValue[0];
+        document.getElementById("integralGainSlider").value = paramValue[1];
+        document.getElementById("derivativeGainSlider").value = paramValue[2];
+
+        document.getElementById("setPointSliderValue").innerHTML = parseFloat(paramValue[3]) + 90.0;
+        document.getElementById("proportionalGainSliderValue").innerHTML = paramValue[0];
+        document.getElementById("integralGainSliderValue").innerHTML = paramValue[1];
+        document.getElementById("derivativeGainSliderValue").innerHTML = paramValue[2];
       });
       {Connection: close};
     }
 
+    function GreetHumanOverlord()
+    {
+      $.get("/greet");
+      {Connection: close};
+    }
+
+    function Boogie()
+    {
+      $.get("/boogie");
+      {Connection: close};
+    }
+
+
     </script>
 </body>
 </html>
+
 )TEMPLATE";
 

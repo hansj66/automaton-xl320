@@ -58,9 +58,9 @@ void Poser::InitServo(uint8_t id, uint8_t mode)
 
 void Poser::RelaxArms()
 {
-      _dxl.setGoalVelocity(LEFT_ARM_ID, 100, UNIT_PERCENT);
+      _dxl.setGoalVelocity(LEFT_ARM_ID, 20, UNIT_PERCENT);
     delay(4);
-    _dxl.setGoalVelocity(RIGHT_ARM_ID, 100, UNIT_PERCENT);
+    _dxl.setGoalVelocity(RIGHT_ARM_ID, 20, UNIT_PERCENT);
     delay(4);
 
   while (!_dxl.setGoalVelocity(LEFT_ARM_ID, 100, UNIT_PERCENT))  { delay(2); }
@@ -72,14 +72,13 @@ void Poser::RelaxArms()
 
 void Poser::Rise() 
 {
-    return; // For now
     sensors_event_t event; 
     _bno.getEvent(&event);
 
     int stopPos = 0;
-    _dxl.setGoalVelocity(LEFT_ARM_ID, 50);
+    _dxl.setGoalVelocity(LEFT_ARM_ID, 10, UNIT_PERCENT);
     delay(4);
-    _dxl.setGoalVelocity(RIGHT_ARM_ID, 50);
+    _dxl.setGoalVelocity(RIGHT_ARM_ID, 10, UNIT_PERCENT);
     delay(4);
 
     if ((event.orientation.z < 5) && (event.orientation.z > -90)) 
@@ -96,7 +95,11 @@ void Poser::Rise()
         delay(4);
     }
 
-    delay(5000);
+    while (_dxl.getPresentPosition(LEFT_ARM_ID, UNIT_RAW) < 1023)
+    {
+      delay(20);
+    }
+
 }
 
 void Poser::SetSpeed(float speed)

@@ -40,7 +40,7 @@ void IMUConfig::Calibrate()
 
         sensors_event_t event; 
         _bno->getEvent(&event);
-        if (event.orientation.z > 0)
+        if (event.orientation.z > 20)
         {
             _calibrationDataLoaded = false;
             _screen->DisplayText("Forcing recalibration", MESSAGE_GRACE_PERIOD);
