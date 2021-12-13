@@ -58,9 +58,9 @@ void Poser::InitServo(uint8_t id, uint8_t mode)
 
 void Poser::RelaxArms()
 {
-      _dxl.setGoalVelocity(LEFT_ARM_ID, 20, UNIT_PERCENT);
+      _dxl.setGoalVelocity(LEFT_ARM_ID, 10, UNIT_PERCENT);
     delay(4);
-    _dxl.setGoalVelocity(RIGHT_ARM_ID, 20, UNIT_PERCENT);
+    _dxl.setGoalVelocity(RIGHT_ARM_ID, 10, UNIT_PERCENT);
     delay(4);
 
   while (!_dxl.setGoalVelocity(LEFT_ARM_ID, 100, UNIT_PERCENT))  { delay(2); }

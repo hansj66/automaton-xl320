@@ -67,12 +67,14 @@ void paramLoadHandler(AsyncWebServerRequest *request)
 
 void greetHandler(AsyncWebServerRequest *request)
 {
+    // TODO
     Serial.printf("greetHandler called\n");
     request->send(200, "text/html", "OK");
 }
 
 void boogieHandler(AsyncWebServerRequest *request)
 {
+    // TODO
     Serial.printf("boogieHandler called\n");
     request->send(200, "text/html", "OK");
 }
