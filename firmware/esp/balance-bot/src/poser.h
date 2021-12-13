@@ -35,7 +35,6 @@ class Poser
      double Balance();
      void Forwards();
      void Reverse();
-     void AutoTune();
      void SetSpeed(float speed);
 
     private:
@@ -43,9 +42,6 @@ class Poser
      Dynamixel2Arduino & _dxl;
      PID & _pid;
      Display & _screen;
-     double AutoTuneP(const char * heading, double minVal, double maxVal, double increment);
-     double AutoTuneI(const char * heading, double minVal, double maxVal, double increment);
-     double AutoTuneD(const char * heading, double minVal, double maxVal, double increment);
 
      int _currentDirection;
 
