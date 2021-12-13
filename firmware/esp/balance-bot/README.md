@@ -19,3 +19,11 @@ Tested on a ESP-WROOM-32D + [EE-NBIoT-01](https://github.com/ExploratoryEngineer
 
 
 ![Prototype](https://github.com/ExploratoryEngineering/pax-counter/raw/master/images/prototype.jpg)
+
+## Suggested initial PID settings
+
+P: 274
+I: 1657
+D: 3.3
+Setpoint: 90.12
+
