@@ -27775,6 +27775,42 @@
 <wire x1="1.4986" y1="1.4986" x2="-1.4986" y2="1.4986" width="0.1524" layer="51"/>
 <wire x1="-1.4986" y1="1.4986" x2="-1.4986" y2="-1.4986" width="0.1524" layer="51"/>
 </package>
+<package name="1206" urn="urn:adsk.eagle:footprint:40656525/1" library_version="52">
+<smd name="P$1" x="0" y="0" dx="0.914" dy="1.72" layer="1"/>
+<smd name="P$2" x="3.048" y="0" dx="0.914" dy="1.72" layer="1"/>
+<wire x1="-0.6582" y1="1.044" x2="-0.6582" y2="-1.0567" width="0.127" layer="21"/>
+<wire x1="-0.6582" y1="-1.0567" x2="3.6861" y2="-1.0567" width="0.127" layer="21"/>
+<wire x1="3.6861" y1="-1.0567" x2="3.6861" y2="1.044" width="0.127" layer="21"/>
+<wire x1="-0.6582" y1="1.044" x2="3.6861" y2="1.044" width="0.127" layer="21"/>
+<text x="-0.6884" y="1.1431" size="0.4" layer="21">&gt;NAME</text>
+</package>
+<package name="0603" urn="urn:adsk.eagle:footprint:42093908/1" library_version="52">
+<smd name="P$1" x="0" y="0" dx="1" dy="1" layer="1"/>
+<smd name="P$2" x="1.7" y="0" dx="1" dy="1" layer="1"/>
+<wire x1="-0.68" y1="0.68" x2="-0.68" y2="-0.68" width="0.127" layer="21"/>
+<wire x1="-0.68" y1="-0.68" x2="2.38" y2="-0.68" width="0.127" layer="21"/>
+<wire x1="2.38" y1="-0.68" x2="2.38" y2="0.68" width="0.127" layer="21"/>
+<wire x1="2.38" y1="0.68" x2="-0.68" y2="0.68" width="0.127" layer="21"/>
+<text x="-0.68" y="0.85" size="0.8" layer="21">&gt;NAME</text>
+</package>
+<package name="0805" urn="urn:adsk.eagle:footprint:43042363/1" library_version="52">
+<smd name="P$1" x="-1.9" y="0" dx="1.2" dy="1.2" layer="1"/>
+<smd name="P$2" x="0" y="0" dx="1.2" dy="1.2" layer="1"/>
+<wire x1="-2.667" y1="0.762" x2="-2.667" y2="-0.762" width="0.127" layer="21"/>
+<wire x1="-2.667" y1="-0.762" x2="0.762" y2="-0.762" width="0.127" layer="21"/>
+<wire x1="0.762" y1="-0.762" x2="0.762" y2="0.762" width="0.127" layer="21"/>
+<wire x1="0.762" y1="0.762" x2="-2.667" y2="0.762" width="0.127" layer="21"/>
+<text x="-2.667" y="1.016" size="0.8" layer="21">&gt;NAME</text>
+</package>
+<package name="SMQW2120RJT" urn="urn:adsk.eagle:footprint:43113702/1" library_version="52">
+<smd name="P$1" x="0" y="0" dx="4" dy="6" layer="1"/>
+<smd name="P$2" x="8" y="0" dx="4" dy="6" layer="1"/>
+<wire x1="-2.159" y1="3.175" x2="-2.159" y2="-3.175" width="0.127" layer="21"/>
+<wire x1="-2.159" y1="-3.175" x2="10.16" y2="-3.175" width="0.127" layer="21"/>
+<wire x1="10.16" y1="-3.175" x2="10.16" y2="3.175" width="0.127" layer="21"/>
+<wire x1="10.16" y1="3.175" x2="-2.159" y2="3.175" width="0.127" layer="21"/>
+<text x="-2.286" y="3.556" size="0.8" layer="21">&gt;NAME</text>
+</package>
 </packages>
 <packages3d>
 <package3d name="ESP_WROOM_32D" urn="urn:adsk.eagle:package:21801897/2" type="model" library_version="1" library_locally_modified="yes">
@@ -27930,6 +27966,26 @@
 <package3d name="QFN20_CP2102N_SIL-L" urn="urn:adsk.eagle:package:39098833/2" type="box" library_version="51">
 <packageinstances>
 <packageinstance name="QFN20_CP2102N_SIL-L"/>
+</packageinstances>
+</package3d>
+<package3d name="1206" urn="urn:adsk.eagle:package:40656533/1" type="box" library_version="52">
+<packageinstances>
+<packageinstance name="1206"/>
+</packageinstances>
+</package3d>
+<package3d name="0603" urn="urn:adsk.eagle:package:42093921/1" type="box" library_version="52">
+<packageinstances>
+<packageinstance name="0603"/>
+</packageinstances>
+</package3d>
+<package3d name="0805" urn="urn:adsk.eagle:package:43042364/1" type="box" library_version="52">
+<packageinstances>
+<packageinstance name="0805"/>
+</packageinstances>
+</package3d>
+<package3d name="SMQW2120RJT" urn="urn:adsk.eagle:package:43113705/1" type="box" library_version="52">
+<packageinstances>
+<packageinstance name="SMQW2120RJT"/>
 </packageinstances>
 </package3d>
 </packages3d>
@@ -28286,12 +28342,12 @@
 </device>
 </devices>
 </deviceset>
-<deviceset name="RESISTOR" urn="urn:adsk.eagle:component:21801998/2" library_version="2" library_locally_modified="yes">
+<deviceset name="RESISTOR" urn="urn:adsk.eagle:component:21801998/6" library_version="52">
 <gates>
 <gate name="G$1" symbol="RESISTOR" x="2.54" y="-10.16"/>
 </gates>
 <devices>
-<device name="" package="RES_0402">
+<device name="0402" package="RES_0402">
 <connects>
 <connect gate="G$1" pin="P$1" pad="P$1"/>
 <connect gate="G$1" pin="P$2" pad="P$2"/>
@@ -28303,6 +28359,54 @@
 <technology name="">
 <attribute name="VALUE" value="" constant="no"/>
 </technology>
+</technologies>
+</device>
+<device name="1206" package="1206">
+<connects>
+<connect gate="G$1" pin="P$1" pad="P$1"/>
+<connect gate="G$1" pin="P$2" pad="P$2"/>
+</connects>
+<package3dinstances>
+<package3dinstance package3d_urn="urn:adsk.eagle:package:40656533/1"/>
+</package3dinstances>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="0603" package="0603">
+<connects>
+<connect gate="G$1" pin="P$1" pad="P$1"/>
+<connect gate="G$1" pin="P$2" pad="P$2"/>
+</connects>
+<package3dinstances>
+<package3dinstance package3d_urn="urn:adsk.eagle:package:42093921/1"/>
+</package3dinstances>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="0805" package="0805">
+<connects>
+<connect gate="G$1" pin="P$1" pad="P$1"/>
+<connect gate="G$1" pin="P$2" pad="P$2"/>
+</connects>
+<package3dinstances>
+<package3dinstance package3d_urn="urn:adsk.eagle:package:43042364/1"/>
+</package3dinstances>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="SMQW2120RJT" package="SMQW2120RJT">
+<connects>
+<connect gate="G$1" pin="P$1" pad="P$1"/>
+<connect gate="G$1" pin="P$2" pad="P$2"/>
+</connects>
+<package3dinstances>
+<package3dinstance package3d_urn="urn:adsk.eagle:package:43113705/1"/>
+</package3dinstances>
+<technologies>
+<technology name=""/>
 </technologies>
 </device>
 </devices>
@@ -29100,8 +29204,8 @@
 <parts>
 <part name="U1" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="ESP-WROOM-32D" device="" package3d_urn="urn:adsk.eagle:package:21801897/2"/>
 <part name="GND1" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
-<part name="R2" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="RESISTOR" device="" package3d_urn="urn:adsk.eagle:package:21801914/2" value="10k"/>
-<part name="R1" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="RESISTOR" device="" package3d_urn="urn:adsk.eagle:package:21801914/2" value="10k"/>
+<part name="R2" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="RESISTOR" device="0402" package3d_urn="urn:adsk.eagle:package:21801914/2" value=""/>
+<part name="R1" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="RESISTOR" device="0402" package3d_urn="urn:adsk.eagle:package:21801914/2" value=""/>
 <part name="GND3" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="PROG" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="SWITCH_PTS645" device="" package3d_urn="urn:adsk.eagle:package:21801926/3"/>
 <part name="GND5" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
@@ -29113,10 +29217,10 @@
 <part name="U7" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="TPS62056DGSR" device="DGS10-M" package3d_urn="urn:adsk.eagle:package:21801945/1"/>
 <part name="L3" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="INDUCTOR_VLCF4024T-100MR90-2" device="" package3d_urn="urn:adsk.eagle:package:21801946/1" value="10uH"/>
 <part name="J6" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="POWER_SOLDER_TERMINAL" device="9V" package3d_urn="urn:adsk.eagle:package:21801947/2" value="BATTERY"/>
-<part name="R15" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="RESISTOR" device="" package3d_urn="urn:adsk.eagle:package:21801914/2" value="130k"/>
-<part name="R16" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="RESISTOR" device="" package3d_urn="urn:adsk.eagle:package:21801914/2" value="100k"/>
-<part name="R17" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="RESISTOR" device="" package3d_urn="urn:adsk.eagle:package:21801914/2" value="1M"/>
-<part name="R18" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="RESISTOR" device="" package3d_urn="urn:adsk.eagle:package:21801914/2" value="1M"/>
+<part name="R15" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="RESISTOR" device="0402" package3d_urn="urn:adsk.eagle:package:21801914/2" value=""/>
+<part name="R16" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="RESISTOR" device="0402" package3d_urn="urn:adsk.eagle:package:21801914/2" value=""/>
+<part name="R17" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="RESISTOR" device="0402" package3d_urn="urn:adsk.eagle:package:21801914/2" value=""/>
+<part name="R18" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="RESISTOR" device="0402" package3d_urn="urn:adsk.eagle:package:21801914/2" value=""/>
 <part name="C12" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="CAPACITOR" device="1206" package3d_urn="urn:adsk.eagle:package:21801948/1" value="10uF"/>
 <part name="C13" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="CAPACITOR" device="1206" package3d_urn="urn:adsk.eagle:package:21801948/1" value="22uF"/>
 <part name="GND31" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
@@ -29129,7 +29233,7 @@
 <part name="S2" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="SWITCH_JS202011SCQN" device="" package3d_urn="urn:adsk.eagle:package:21801905/1"/>
 <part name="U4" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="TXB0106PWR" device="PW16-L" package3d_urn="urn:adsk.eagle:package:21801911/1"/>
 <part name="GND8" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
-<part name="R3" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="RESISTOR" device="" package3d_urn="urn:adsk.eagle:package:21801914/2" value="10k"/>
+<part name="R3" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="RESISTOR" device="0402" package3d_urn="urn:adsk.eagle:package:21801914/2" value=""/>
 <part name="C8" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="CAPACITOR" device="0402" package3d_urn="urn:adsk.eagle:package:21801930/2" value="0,1uF"/>
 <part name="C9" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="CAPACITOR" device="0402" package3d_urn="urn:adsk.eagle:package:21801930/2" value="0,1uF"/>
 <part name="GND9" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
@@ -29142,10 +29246,10 @@
 <part name="GND12" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="GND13" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="GND14" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
-<part name="R4" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="RESISTOR" device="" package3d_urn="urn:adsk.eagle:package:21801914/2" value="100k"/>
+<part name="R4" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="RESISTOR" device="0402" package3d_urn="urn:adsk.eagle:package:21801914/2" value=""/>
 <part name="GND15" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="U5" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="NC7WZ241K8X" device="" package3d_urn="urn:adsk.eagle:package:21801958/1"/>
-<part name="R5" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="RESISTOR" device="" package3d_urn="urn:adsk.eagle:package:21801914/2" value="10k"/>
+<part name="R5" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="RESISTOR" device="0402" package3d_urn="urn:adsk.eagle:package:21801914/2" value=""/>
 <part name="GND2" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="J2" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="ESP_ROBOT_BOARD_GPIO_16" device="" package3d_urn="urn:adsk.eagle:package:21801959/2"/>
 <part name="R19" library="TimeExpander2" deviceset="RESISTOR" device="" value="2.2k"/>
@@ -29168,12 +29272,15 @@
 <part name="GND43" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="GND44" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="GND45" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
-<part name="R8" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="RESISTOR" device="" package3d_urn="urn:adsk.eagle:package:21801914/2" value="10k"/>
-<part name="R9" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="RESISTOR" device="" package3d_urn="urn:adsk.eagle:package:21801914/2" value="10k"/>
+<part name="R8" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="RESISTOR" device="0402" package3d_urn="urn:adsk.eagle:package:21801914/2" value=""/>
+<part name="R9" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="RESISTOR" device="0402" package3d_urn="urn:adsk.eagle:package:21801914/2" value=""/>
 <part name="U$2" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="LOGO_SELFIE" device="SELFIE_2" package3d_urn="urn:adsk.eagle:package:28820238/1"/>
 <part name="U2" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="CP2102N-A02-GQFN20" device="" package3d_urn="urn:adsk.eagle:package:39098831/1"/>
 <part name="GND10" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
-<part name="R7" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="RESISTOR" device="" package3d_urn="urn:adsk.eagle:package:21801914/2" value="1k"/>
+<part name="R7" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="RESISTOR" device="0402" package3d_urn="urn:adsk.eagle:package:21801914/2" value=""/>
+<part name="R10" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="RESISTOR" device="0402" package3d_urn="urn:adsk.eagle:package:21801914/2" value="22.1k"/>
+<part name="R11" library="TimeExpander2" library_urn="urn:adsk.eagle:library:21801758" deviceset="RESISTOR" device="0402" package3d_urn="urn:adsk.eagle:package:21801914/2" value="47.5k"/>
+<part name="GND16" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -29388,11 +29495,11 @@
 <instance part="GND26" gate="1" x="-94.234" y="144.272" smashed="yes">
 <attribute name="VALUE" x="-96.774" y="141.732" size="1.778" layer="96"/>
 </instance>
-<instance part="J1" gate="G$1" x="113.538" y="59.69" smashed="yes" rot="MR0">
-<attribute name="NAME" x="141.478" y="80.01" size="1.27" layer="94" ratio="6" rot="MR0"/>
+<instance part="J1" gate="G$1" x="126.238" y="59.69" smashed="yes" rot="MR0">
+<attribute name="NAME" x="154.178" y="80.01" size="1.27" layer="94" ratio="6" rot="MR0"/>
 </instance>
-<instance part="GND4" gate="1" x="119.126" y="52.07" smashed="yes">
-<attribute name="VALUE" x="116.586" y="49.53" size="1.778" layer="96"/>
+<instance part="GND4" gate="1" x="131.826" y="52.07" smashed="yes">
+<attribute name="VALUE" x="129.286" y="49.53" size="1.778" layer="96"/>
 </instance>
 <instance part="U$1" gate="G$1" x="-8.89" y="-72.644" smashed="yes"/>
 <instance part="U$4" gate="G$1" x="11.43" y="-72.644" smashed="yes"/>
@@ -29441,6 +29548,17 @@
 <instance part="R7" gate="G$1" x="61.214" y="92.71" smashed="yes">
 <attribute name="NAME" x="63.373" y="95.25" size="1.27" layer="94" rot="R90"/>
 <attribute name="VALUE" x="68.707" y="94.996" size="1.27" layer="94" rot="R90"/>
+</instance>
+<instance part="R10" gate="G$1" x="127" y="76.2" smashed="yes" rot="R90">
+<attribute name="NAME" x="125.095" y="80.264" size="1.27" layer="94" rot="R90"/>
+<attribute name="VALUE" x="127.381" y="80.264" size="1.27" layer="94" rot="R90"/>
+</instance>
+<instance part="R11" gate="G$1" x="127" y="88.9" smashed="yes" rot="R90">
+<attribute name="NAME" x="125.095" y="92.964" size="1.27" layer="94" rot="R90"/>
+<attribute name="VALUE" x="127.381" y="92.964" size="1.27" layer="94" rot="R90"/>
+</instance>
+<instance part="GND16" gate="1" x="134.366" y="95.25" smashed="yes">
+<attribute name="VALUE" x="131.826" y="92.71" size="1.778" layer="96"/>
 </instance>
 </instances>
 <busses>
@@ -29599,8 +29717,8 @@
 <segment>
 <pinref part="J1" gate="G$1" pin="GND"/>
 <pinref part="GND4" gate="1" pin="GND"/>
-<wire x1="121.158" y1="64.77" x2="119.126" y2="64.77" width="0.1524" layer="91"/>
-<wire x1="119.126" y1="64.77" x2="119.126" y2="54.61" width="0.1524" layer="91"/>
+<wire x1="133.858" y1="64.77" x2="131.826" y2="64.77" width="0.1524" layer="91"/>
+<wire x1="131.826" y1="64.77" x2="131.826" y2="54.61" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="U$1" gate="G$1" pin="GND"/>
@@ -29650,6 +29768,12 @@
 <wire x1="76.708" y1="27.686" x2="73.914" y2="27.686" width="0.1524" layer="91"/>
 <wire x1="73.914" y1="27.686" x2="73.914" y2="25.146" width="0.1524" layer="91"/>
 <junction x="73.914" y="25.146"/>
+</segment>
+<segment>
+<pinref part="R11" gate="G$1" pin="P$2"/>
+<pinref part="GND16" gate="1" pin="GND"/>
+<wire x1="127" y1="99.06" x2="134.366" y2="99.06" width="0.1524" layer="91"/>
+<wire x1="134.366" y1="99.06" x2="134.366" y2="97.79" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$6" class="0">
@@ -30206,8 +30330,8 @@
 </segment>
 <segment>
 <pinref part="U2" gate="A" pin="VREGIN"/>
-<wire x1="114.046" y1="87.63" x2="121.666" y2="87.63" width="0.1524" layer="91"/>
-<label x="121.666" y="87.63" size="1.778" layer="95" xref="yes"/>
+<wire x1="114.046" y1="87.63" x2="114.046" y2="100.33" width="0.1524" layer="91"/>
+<label x="114.046" y="100.33" size="1.778" layer="95" xref="yes"/>
 </segment>
 <segment>
 <pinref part="L3" gate="G$1" pin="2"/>
@@ -30269,25 +30393,38 @@
 <wire x1="50.546" y1="85.09" x2="73.406" y2="85.09" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$15" class="0">
-<segment>
-<pinref part="J1" gate="G$1" pin="USB_VBUS"/>
-<pinref part="U2" gate="A" pin="VBUS"/>
-<wire x1="121.158" y1="74.93" x2="114.046" y2="74.93" width="0.1524" layer="91"/>
-</segment>
-</net>
 <net name="N$16" class="0">
 <segment>
 <pinref part="J1" gate="G$1" pin="USB_DP"/>
 <pinref part="U2" gate="A" pin="D+"/>
-<wire x1="121.158" y1="72.39" x2="114.046" y2="72.39" width="0.1524" layer="91"/>
+<wire x1="133.858" y1="72.39" x2="114.046" y2="72.39" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$17" class="0">
 <segment>
 <pinref part="J1" gate="G$1" pin="USB_DM"/>
 <pinref part="U2" gate="A" pin="D-"/>
-<wire x1="121.158" y1="69.85" x2="114.046" y2="69.85" width="0.1524" layer="91"/>
+<wire x1="133.858" y1="69.85" x2="114.046" y2="69.85" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$15" class="0">
+<segment>
+<pinref part="J1" gate="G$1" pin="USB_VBUS"/>
+<pinref part="R10" gate="G$1" pin="P$1"/>
+<wire x1="133.858" y1="74.93" x2="127" y2="74.93" width="0.1524" layer="91"/>
+<wire x1="127" y1="74.93" x2="127" y2="76.2" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$18" class="0">
+<segment>
+<pinref part="R10" gate="G$1" pin="P$2"/>
+<pinref part="R11" gate="G$1" pin="P$1"/>
+<wire x1="127" y1="86.36" x2="127" y2="88.9" width="0.1524" layer="91"/>
+<pinref part="U2" gate="A" pin="VBUS"/>
+<wire x1="114.046" y1="74.93" x2="119.38" y2="74.93" width="0.1524" layer="91"/>
+<wire x1="119.38" y1="74.93" x2="119.38" y2="86.36" width="0.1524" layer="91"/>
+<wire x1="119.38" y1="86.36" x2="127" y2="86.36" width="0.1524" layer="91"/>
+<junction x="127" y="86.36"/>
 </segment>
 </net>
 </nets>
